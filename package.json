@@ -1,11 +1,29 @@
 {
   "name": "vue-threeui",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.0",
+  "private": false,
   "type": "module",
+  "main": "./lib-dist/vue-threeui.umd.js",
+  "module": "./lib-dist/vue-threeui.es.js",
+  "types": "./lib-dist/lib/index.d.ts",
+  "files": [
+    "lib-dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./lib-dist/vue-threeui.es.js",
+      "require": "./lib-dist/vue-threeui.umd.js",
+      "types": "./lib-dist/lib/index.d.ts"
+    },
+    "./style.css": {
+      "import": "./lib-dist/vue-threeui.css",
+      "require": "./lib-dist/vue-threeui.css"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
+    "build:lib": "vite build --config vite.config.lib.ts && vue-tsc --declaration --emitDeclarationOnly --outDir lib-dist",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
@@ -14,7 +32,9 @@
     "lint:eslint": "eslint . --fix --cache",
     "format": "prettier --write --experimental-cli src/",
     "create-component": "node scripts/create-component.js",
-    "generate-skill": "node scripts/generate-skill.js"
+    "generate-skill": "node scripts/generate-skill.js",
+    "validate-component": "node scripts/validate-component.js",
+    "export-components": "node scripts/export-components.js"
   },
   "dependencies": {
     "@types/markdown-it": "^14.2.0",

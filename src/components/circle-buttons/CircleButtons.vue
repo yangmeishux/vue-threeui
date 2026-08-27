@@ -5,7 +5,7 @@ import { computed } from 'vue'
 export type CircleButtonVariant = 'play' | 'plus' | 'mail'
 export type CircleButtonMode = 'light' | 'dark'
 
-interface Props {
+export interface CircleButtonsProps {
   /** 按钮变体：play（暗色玻璃）、plus（琥珀渐变）、mail（点阵边框） */
   variant?: CircleButtonVariant
   /** 主题模式 */
@@ -24,7 +24,7 @@ interface Props {
   type?: 'button' | 'submit' | 'reset'
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<CircleButtonsProps>(), {
   variant: 'play',
   mode: 'dark',
   hue: 0,

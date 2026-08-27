@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./lib-dist",
+    "rootDir": "./src"
+  },
+  "include": [
+    "src/lib/**/*.ts",
+    "src/components/**/*.vue",
+    "src/components/**/*.ts",
+    "src/data/**/*.ts",
+    "env.d.ts"
+  ],
+  "exclude": [
+    "src/pages/**/*",
+    "src/docs/**/*",
+    "src/router/**/*",
+    "src/**/*.spec.ts"
+  ]
+}

@@ -28,7 +28,7 @@ description: Vue 3 圆形按钮组件，提供三种风格：暗色玻璃（play
 import { CircleButtons } from 'vue-threeui'
 ```
 
-## 使用方式
+## 使用示例
 
 ```vue
 <script setup lang="ts">

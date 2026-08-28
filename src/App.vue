@@ -3,10 +3,10 @@
     <header class="site-header">
       <div class="site-header__inner">
         <nav class="site-nav site-nav--left" aria-label="主导航">
-          <router-link to="/browse">Browse</router-link>
+          <router-link to="/browse">组件</router-link>
         </nav>
 
-        <router-link to="/" class="brand" aria-label="vue-threeui home">
+        <router-link to="/" class="brand" aria-label="vue-threeui 首页">
           <span class="brand__mark" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none">
               <circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="1.2" />
@@ -44,7 +44,8 @@
   --chip: rgba(247, 248, 248, 0.04);
   --header: 52px;
   --radius: 10px;
-  --font: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font: 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 *,
@@ -127,6 +128,7 @@ select {
 }
 
 .brand__name {
+  font-family: var(--font-mono);
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.02em;

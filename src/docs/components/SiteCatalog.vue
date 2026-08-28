@@ -10,12 +10,12 @@ const sortMode = ref<'popular' | 'recent'>('popular')
 
 const categories = getAllCategories()
 const allTags = computed(() => [...new Set(components.flatMap((item) => item.tags))])
-const pills = computed(() => ['', ...categories, ...allTags.value])
+const pills = computed(() => ['', ...new Set([...categories, ...allTags.value])])
 
 const filteredComponents = computed(() => {
   const query = searchQuery.value.trim().toLowerCase()
   const list = components.filter((component) => {
-    const hay = [component.name, component.description, component.category, ...component.tags]
+    const hay = [component.name, component.title, component.description, component.category, ...component.tags]
       .join(' ')
       .toLowerCase()
     const matchesSearch = !query || hay.includes(query)
@@ -33,7 +33,7 @@ const filteredComponents = computed(() => {
 })
 
 function pillLabel(value: string) {
-  return value === '' ? 'All' : value
+  return value === '' ? '全部' : value
 }
 
 function previewVariants(component: ComponentMeta) {
@@ -51,10 +51,9 @@ function previewVariants(component: ComponentMeta) {
 <template>
   <div class="catalog">
     <header class="catalog-hero">
-      <h1>Vue 3 components, templates and interactive shaders.</h1>
+      <h1>Vue 3 组件、模板与交互着色器</h1>
       <p>
-        可复制的 Vue 组件、WebGL 背景、Hero 区块与 UI 动效。每个组件都带实时预览、调用示例和
-        SKILL.md。
+        可复制的 Vue 组件、WebGL 背景、首屏区块与界面动效。每个组件都带实时预览、调用示例和 Skill.md。
       </p>
     </header>
 
@@ -83,16 +82,16 @@ function previewVariants(component: ComponentMeta) {
           <input
             v-model="searchQuery"
             type="search"
-            :placeholder="`Search ${components.length} components`"
+            :placeholder="`搜索 ${components.length} 个组件`"
           />
         </label>
 
         <div class="segment" role="group" aria-label="排序">
           <button type="button" :class="{ 'is-active': sortMode === 'popular' }" @click="sortMode = 'popular'">
-            Popular
+            热门
           </button>
           <button type="button" :class="{ 'is-active': sortMode === 'recent' }" @click="sortMode = 'recent'">
-            Recent
+            最新
           </button>
         </div>
       </div>
@@ -110,12 +109,14 @@ function previewVariants(component: ComponentMeta) {
                 mode="dark"
               />
             </div>
-            <div v-else class="card__empty">No preview</div>
+            <div v-else class="card__empty">暂无预览</div>
           </div>
           <div class="card__meta">
             <div class="card__title-row">
-              <h2>{{ component.title }}</h2>
-              <span class="card__id">{{ component.id }}</span>
+              <h2>
+                {{ component.name }}
+                <span class="card__en">{{ component.title }}</span>
+              </h2>
             </div>
             <p>{{ component.description }}</p>
             <div class="card__tags">
@@ -312,6 +313,14 @@ function previewVariants(component: ComponentMeta) {
 .card__meta h2 {
   font-size: 14px;
   font-weight: 500;
+}
+
+.card__en {
+  margin-left: 8px;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
 }
 
 .card__id {

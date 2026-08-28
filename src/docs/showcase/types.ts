@@ -19,9 +19,9 @@ export interface ComponentEventDoc {
 
 export interface ComponentDoc {
   id: string
-  /** 目录与中文名 */
+  /** 中文名，页面主标题 */
   name: string
-  /** 详情页主标题，如 Circle Buttons */
+  /** 英文名，仅作辅助标注 */
   title: string
   category: string
   description: string

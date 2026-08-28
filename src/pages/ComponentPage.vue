@@ -44,7 +44,7 @@ function asVariant(value: string): CircleButtonVariant {
 <template>
   <div v-if="!doc" class="missing">
     <p>未找到组件。</p>
-    <router-link to="/browse">Back to Browse</router-link>
+    <router-link to="/browse">返回组件列表</router-link>
   </div>
 
   <ComponentShowcase

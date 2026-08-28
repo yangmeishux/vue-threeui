@@ -64,14 +64,14 @@ const usageCode = computed(() => {
 
 const promptText = computed(() => {
   return [
-    `Use the vue-threeui ${props.doc.importName} component (${props.doc.title}).`,
+    `在项目中使用 vue-threeui 的 ${props.doc.importName} 组件（${props.doc.name} / ${props.doc.title}）。`,
     '',
     props.doc.lede,
     '',
-    'Example:',
+    '示例：',
     usageCode.value,
     '',
-    '--- SKILL.md ---',
+    '--- Skill.md ---',
     props.skillContent,
   ].join('\n')
 })
@@ -106,9 +106,12 @@ function resizePreview(delta: number) {
   <article class="showcase">
     <header class="showcase-head">
       <div class="showcase-head__row">
-        <h1>{{ doc.title }}</h1>
+        <h1>
+          {{ doc.name }}
+          <small>{{ doc.title }}</small>
+        </h1>
         <button type="button" class="copy-prompt" @click="copyPrompt">
-          {{ copiedPrompt ? 'Copied' : 'Copy Prompt' }}
+          {{ copiedPrompt ? '已复制' : '复制提示词' }}
         </button>
       </div>
       <p class="lede">{{ doc.lede }}</p>
@@ -129,15 +132,15 @@ function resizePreview(delta: number) {
         <div class="stage" :class="`is-${mode}`" :style="{ height: `${previewHeight}px` }">
           <slot name="preview" />
           <div class="stage-bar">
-            <button type="button" title="Decrease preview height" @click="resizePreview(-100)">−</button>
-            <button type="button" title="Increase preview height" @click="resizePreview(100)">+</button>
-            <button type="button" title="Reset preview height" @click="previewHeight = 420">↺</button>
+            <button type="button" title="降低预览高度" @click="resizePreview(-100)">−</button>
+            <button type="button" title="增加预览高度" @click="resizePreview(100)">+</button>
+            <button type="button" title="重置预览高度" @click="previewHeight = 420">↺</button>
           </div>
         </div>
       </div>
 
       <aside class="controls">
-        <div v-if="doc.variants.length" class="variants" role="radiogroup" aria-label="Variant">
+        <div v-if="doc.variants.length" class="variants" role="radiogroup" aria-label="变体">
           <label v-for="item in doc.variants" :key="item.id" class="variant">
             <input
               type="radio"
@@ -146,29 +149,32 @@ function resizePreview(delta: number) {
               :checked="variant === item.id"
               @change="emit('update:variant', item.id)"
             >
-            <span class="variant__label">{{ item.label }}</span>
+            <span class="variant__label">
+              {{ item.label }}
+              <small>{{ item.id }}</small>
+            </span>
             <span class="variant__desc">{{ item.description }}</span>
           </label>
         </div>
 
-        <button type="button" class="reset" @click="emit('reset')">Reset {{ doc.title }} props</button>
+        <button type="button" class="reset" @click="emit('reset')">重置属性</button>
 
-        <div class="mode-switch" role="group" aria-label="Theme">
-          <button type="button" :class="{ 'is-active': mode === 'dark' }" @click="emit('update:mode', 'dark')">Dark</button>
-          <button type="button" :class="{ 'is-active': mode === 'light' }" @click="emit('update:mode', 'light')">Light</button>
+        <div class="mode-switch" role="group" aria-label="主题">
+          <button type="button" :class="{ 'is-active': mode === 'dark' }" @click="emit('update:mode', 'dark')">深色</button>
+          <button type="button" :class="{ 'is-active': mode === 'light' }" @click="emit('update:mode', 'light')">浅色</button>
         </div>
 
         <div v-if="doc.colorTune" class="sliders">
           <label>
-            <span>Hue <em>{{ hue }}</em></span>
+            <span>色相 <em>{{ hue }}</em></span>
             <input type="range" min="-180" max="180" step="1" :value="hue" @input="emit('update:hue', Number(($event.target as HTMLInputElement).value))">
           </label>
           <label>
-            <span>Saturation <em>{{ saturation.toFixed(2) }}</em></span>
+            <span>饱和度 <em>{{ saturation.toFixed(2) }}</em></span>
             <input type="range" min="0" max="2" step="0.01" :value="saturation" @input="emit('update:saturation', Number(($event.target as HTMLInputElement).value))">
           </label>
           <label>
-            <span>Brightness <em>{{ brightness.toFixed(2) }}</em></span>
+            <span>亮度 <em>{{ brightness.toFixed(2) }}</em></span>
             <input type="range" min="0.35" max="1.65" step="0.01" :value="brightness" @input="emit('update:brightness', Number(($event.target as HTMLInputElement).value))">
           </label>
         </div>
@@ -176,27 +182,27 @@ function resizePreview(delta: number) {
     </div>
 
     <div class="doc-tabs" role="tablist">
-      <button type="button" role="tab" :aria-selected="docTab === 'usage'" :class="{ 'is-active': docTab === 'usage' }" @click="docTab = 'usage'">Usage</button>
-      <button type="button" role="tab" :aria-selected="docTab === 'code'" :class="{ 'is-active': docTab === 'code' }" @click="docTab = 'code'">Code</button>
+      <button type="button" role="tab" :aria-selected="docTab === 'usage'" :class="{ 'is-active': docTab === 'usage' }" @click="docTab = 'usage'">调用方式</button>
+      <button type="button" role="tab" :aria-selected="docTab === 'code'" :class="{ 'is-active': docTab === 'code' }" @click="docTab = 'code'">代码</button>
       <button type="button" role="tab" :aria-selected="docTab === 'skill'" :class="{ 'is-active': docTab === 'skill' }" @click="docTab = 'skill'">Skill.md</button>
     </div>
 
     <section v-if="docTab === 'usage'" class="doc-panel">
-      <h2>Usage</h2>
+      <h2>调用方式</h2>
       <CodeBlock :code="usageCode" language="vue" />
-      <h2>Installation</h2>
+      <h2>安装</h2>
       <div class="pkg-tabs">
         <button v-for="mgr in (['npm', 'pnpm', 'bun', 'yarn'] as const)" :key="mgr" type="button" :class="{ 'is-active': packageManager === mgr }" @click="packageManager = mgr">
           {{ mgr }}
         </button>
       </div>
       <CodeBlock :code="installCommands[packageManager]" language="bash" />
-      <p class="hint">Import only from the library entrypoint:</p>
+      <p class="hint">请从库的入口导入：</p>
       <CodeBlock :code="`import { ${doc.importName} } from 'vue-threeui'`" language="typescript" />
     </section>
 
     <section v-else-if="docTab === 'code'" class="doc-panel">
-      <h2>Code</h2>
+      <h2>代码</h2>
       <CodeBlock :code="usageCode" language="vue" />
     </section>
 
@@ -206,14 +212,14 @@ function resizePreview(delta: number) {
     </section>
 
     <section class="doc-panel">
-      <h2>Props</h2>
+      <h2>属性</h2>
       <table class="props-table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Default</th>
-            <th>Description</th>
+            <th>属性</th>
+            <th>类型</th>
+            <th>默认值</th>
+            <th>说明</th>
           </tr>
         </thead>
         <tbody>
@@ -228,13 +234,13 @@ function resizePreview(delta: number) {
     </section>
 
     <section v-if="doc.events.length" class="doc-panel">
-      <h2>Events</h2>
+      <h2>事件</h2>
       <table class="props-table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Payload</th>
-            <th>Description</th>
+            <th>事件名</th>
+            <th>参数</th>
+            <th>说明</th>
           </tr>
         </thead>
         <tbody>
@@ -247,21 +253,21 @@ function resizePreview(delta: number) {
       </table>
     </section>
 
-    <nav class="pager" aria-label="Adjacent components">
+    <nav class="pager" aria-label="相邻组件">
       <router-link v-if="adjacent.prev" class="pager__link" :to="adjacent.prev.path">
-        <span>Previous</span>
-        <strong>{{ adjacent.prev.title }}</strong>
+        <span>上一个</span>
+        <strong>{{ adjacent.prev.name }}</strong>
       </router-link>
       <span v-else class="pager__link is-disabled">
-        <span>Previous</span>
+        <span>上一个</span>
         <strong>—</strong>
       </span>
       <router-link v-if="adjacent.next" class="pager__link pager__link--next" :to="adjacent.next.path">
-        <span>Next</span>
-        <strong>{{ adjacent.next.title }}</strong>
+        <span>下一个</span>
+        <strong>{{ adjacent.next.name }}</strong>
       </router-link>
       <span v-else class="pager__link pager__link--next is-disabled">
-        <span>Next</span>
+        <span>下一个</span>
         <strong>—</strong>
       </span>
     </nav>
@@ -286,6 +292,16 @@ function resizePreview(delta: number) {
   font-size: 26px;
   font-weight: 500;
   letter-spacing: -0.04em;
+}
+
+.showcase-head h1 small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
 }
 
 .copy-prompt {
@@ -403,6 +419,13 @@ function resizePreview(delta: number) {
 .variant__label {
   font-size: 13px;
   color: var(--muted);
+}
+
+.variant__label small {
+  margin-left: 6px;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 11px;
 }
 
 .variant:has(input:checked) .variant__label {

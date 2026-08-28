@@ -10,6 +10,7 @@ import markdown from 'highlight.js/lib/languages/markdown'
 
 hljs.registerLanguage('xml', xml)
 hljs.registerLanguage('html', xml)
+hljs.registerLanguage('vue', xml)
 hljs.registerLanguage('javascript', javascript)
 hljs.registerLanguage('typescript', typescript)
 hljs.registerLanguage('css', css)
@@ -71,7 +72,7 @@ watch(() => [props.code, props.language], highlight)
         {{ copied ? '✓ 已复制' : '复制' }}
       </button>
     </div>
-    <pre class="code-block"><code ref="codeRef" :class="`language-${language}`">{{ code }}</code></pre>
+    <pre class="code-block"><code ref="codeRef" class="hljs" :class="`language-${language}`">{{ code }}</code></pre>
   </div>
 </template>
 
@@ -126,9 +127,12 @@ watch(() => [props.code, props.language], highlight)
   overflow-x: auto;
   font-size: 0.9rem;
   line-height: 1.6;
+  color: #abb2bf;
 }
 
 .code-block code {
   font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  color: #abb2bf;
+  background: transparent;
 }
 </style>

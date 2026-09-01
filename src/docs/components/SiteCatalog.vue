@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { CircleButtons } from '@/components'
+import { CircleButtons, FireworksBackdrop } from '@/components'
 import { components, getAllCategories } from '@/data/components'
 import type { ComponentMeta } from '@/data/components'
 
@@ -108,6 +108,9 @@ function previewVariants(component: ComponentMeta) {
                 :variant="item.variant"
                 mode="dark"
               />
+            </div>
+            <div v-else-if="component.id === 'fireworks-backdrop'" class="card__stage card__stage--fill">
+              <FireworksBackdrop palette="night" :intensity="0.85" />
             </div>
             <div v-else class="card__empty">暂无预览</div>
           </div>
@@ -289,6 +292,12 @@ function previewVariants(component: ComponentMeta) {
 
 .card__stage :deep(.circle-button) {
   pointer-events: none;
+}
+
+.card__stage--fill :deep(.fireworks-backdrop) {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
 }
 
 .card__empty {

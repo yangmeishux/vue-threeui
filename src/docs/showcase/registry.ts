@@ -40,6 +40,46 @@ export const componentDocs: ComponentDoc[] = [
     ],
     events: [{ name: 'click', params: 'MouseEvent', description: '点击事件' }],
   },
+  {
+    id: 'fireworks-backdrop',
+    name: '烟花背景',
+    title: 'Fireworks Backdrop',
+    category: '背景',
+    description: '门户全屏烟花：全景绽放、落到下方仰视，再急旋拉近特写直至火花消失',
+    lede: '背景 · 约 24 秒电影运镜：全景缓摇、落到烟花下方仰视立体绽放，再急速旋转拉近特写到消散。',
+    tags: ['背景', '烟花', 'WebGL', 'Three.js', '门户'],
+    path: '/component/fireworks-backdrop',
+    importName: 'FireworksBackdrop',
+    colorTune: true,
+    variants: [
+      {
+        id: 'night',
+        label: '夜空',
+        description: '冷暖混色火花，适合常规门户首屏。',
+      },
+      {
+        id: 'festival',
+        label: '节庆',
+        description: '红金绿白撞色，适合活动与节日页。',
+      },
+      {
+        id: 'gold',
+        label: '鎏金',
+        description: '琥珀与金箔色，适合品牌开场。',
+      },
+    ],
+    props: [
+      { name: 'palette', type: "'night' | 'festival' | 'gold'", default: "'night'", description: '烟花配色' },
+      { name: 'variant', type: "'night' | 'festival' | 'gold'", default: '-', description: '与 palette 等价' },
+      { name: 'mode', type: "'dark' | 'light'", default: "'dark'", description: '夜空 / 暮色天空' },
+      { name: 'intensity', type: 'number', default: '1', description: '燃放密度，0.35 ~ 2' },
+      { name: 'paused', type: 'boolean', default: 'false', description: '暂停镜头与粒子' },
+      { name: 'hue', type: 'number', default: '0', description: '色相偏移（deg），-180 ~ 180' },
+      { name: 'saturation', type: 'number', default: '1', description: '饱和度倍数，0 ~ 2' },
+      { name: 'brightness', type: 'number', default: '1', description: '亮度倍数，0.35 ~ 1.65' },
+    ],
+    events: [],
+  },
 ]
 
 export function getComponentDoc(id: string): ComponentDoc | undefined {

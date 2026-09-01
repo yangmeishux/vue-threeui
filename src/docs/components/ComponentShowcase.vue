@@ -39,26 +39,28 @@ const installCommands: Record<string, string> = {
 
 const usageCode = computed(() => {
   const name = props.doc.importName
+  const hasClick = props.doc.events.some((event) => event.name === 'click')
+  const hasPalette = props.doc.props.some((item) => item.name === 'palette')
+  const hasVariant = props.doc.props.some((item) => item.name === 'variant')
+  const hasMode = props.doc.props.some((item) => item.name === 'mode')
   const lines = [
     '<script setup lang="ts">',
     `import { ${name} } from 'vue-threeui'`,
-    '',
-    `function handleClick() {`,
-    `  console.log('clicked')`,
-    `}`,
-    '<\/script>',
-    '',
-    '<template>',
-    `  <${name}`,
-    `    variant="${props.variant}"`,
-    `    mode="${props.mode}"`,
   ]
+  if (hasClick) {
+    lines.push('', 'function handleClick() {', `  console.log('clicked')`, '}')
+  }
+  lines.push('<\/script>', '', '<template>', `  <${name}`)
+  if (hasPalette) lines.push(`    palette="${props.variant}"`)
+  else if (hasVariant) lines.push(`    variant="${props.variant}"`)
+  if (hasMode) lines.push(`    mode="${props.mode}"`)
   if (props.doc.colorTune) {
     lines.push(`    :hue="${props.hue}"`)
     lines.push(`    :saturation="${props.saturation}"`)
     lines.push(`    :brightness="${props.brightness}"`)
   }
-  lines.push('    @click="handleClick"', `  />`, '</template>')
+  if (hasClick) lines.push('    @click="handleClick"')
+  lines.push(`  />`, '</template>')
   return lines.join('\n')
 })
 
@@ -196,7 +198,7 @@ function resizePreview(delta: number) {
           {{ mgr }}
         </button>
       </div>
-      <CodeBlock :code="installCommands[packageManager]" language="bash" />
+      <CodeBlock :code="installCommands[packageManager] ?? 'npm install vue-threeui'" language="bash" />
       <p class="hint">请从库的入口导入：</p>
       <CodeBlock :code="`import { ${doc.importName} } from 'vue-threeui'`" language="typescript" />
     </section>
@@ -369,7 +371,8 @@ function resizePreview(delta: number) {
 }
 
 .stage :deep(.circle-buttons),
-.stage :deep(.showcase-preview) {
+.stage :deep(.showcase-preview),
+.stage :deep(.fireworks-backdrop) {
   width: 100%;
   height: 100%;
   min-height: 100%;

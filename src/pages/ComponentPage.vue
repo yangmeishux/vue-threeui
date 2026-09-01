@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { CircleButtons } from '@/components'
+import { CircleButtons, FireworksBackdrop } from '@/components'
 import type { CircleButtonMode, CircleButtonVariant } from '@/components'
 import ComponentShowcase from '@/docs/components/ComponentShowcase.vue'
 import { getComponentDoc } from '@/docs/showcase/registry'
@@ -22,23 +22,28 @@ const skillContent = computed(() => {
   return match?.[1] ?? ''
 })
 
-const variant = ref<CircleButtonVariant>('play')
+const variant = ref('play')
 const mode = ref<CircleButtonMode>('dark')
 const hue = ref(0)
 const saturation = ref(1)
 const brightness = ref(1)
 
 function resetPlayground() {
-  variant.value = 'play'
+  variant.value = doc.value?.variants[0]?.id ?? 'play'
   mode.value = 'dark'
   hue.value = 0
   saturation.value = 1
   brightness.value = 1
 }
 
-function asVariant(value: string): CircleButtonVariant {
-  return value === 'plus' || value === 'mail' ? value : 'play'
+function asVariant(value: string) {
+  const ids = doc.value?.variants.map((item) => item.id) ?? []
+  return ids.includes(value) ? value : (ids[0] ?? value)
 }
+
+watch(componentId, () => {
+  resetPlayground()
+}, { immediate: true })
 </script>
 
 <template>
@@ -67,7 +72,16 @@ function asVariant(value: string): CircleButtonVariant {
       <CircleButtons
         v-if="doc.id === 'circle-buttons'"
         class="showcase-preview"
-        :variant="variant"
+        :variant="variant as CircleButtonVariant"
+        :mode="mode"
+        :hue="hue"
+        :saturation="saturation"
+        :brightness="brightness"
+      />
+      <FireworksBackdrop
+        v-else-if="doc.id === 'fireworks-backdrop'"
+        class="showcase-preview"
+        :palette="variant as 'night' | 'festival' | 'gold'"
         :mode="mode"
         :hue="hue"
         :saturation="saturation"
